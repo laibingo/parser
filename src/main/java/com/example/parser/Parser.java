@@ -4,20 +4,37 @@ public abstract class Parser {
 
 	Lexer lexer;
 
-	Token lookahead;
+	Token[] lookahead;
 
-	public Parser(Lexer lexer) {
+	int k;
+
+	int p = 0;
+
+	public Parser(Lexer lexer, int k) {
 		this.lexer = lexer;
-		lookahead = this.lexer.nextToken();
+		this.k = k;
+		this.lookahead = new Token[k];
+		for (int i = 0; i < k; i++) {
+			consume();
+		}
+	}
+
+	public Token LT(int i) {
+		return lookahead[(p + i - 1) % k];
+	}
+
+	public int LA(int i) {
+		return LT(i).getType();
 	}
 
 	public void match(int x) {
-		if (lookahead.getType() == x) consume();
+		if (LA(1) == x) consume();
 		else throw new RuntimeException("error");
 	}
 
 	private void consume() {
-		lookahead = lexer.nextToken();
+		lookahead[p] = lexer.nextToken();
+		p = (p + 1) % k;
 	}
 
 

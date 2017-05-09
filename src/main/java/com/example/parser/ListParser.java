@@ -2,8 +2,8 @@ package com.example.parser;
 
 public class ListParser extends Parser {
 
-	public ListParser(Lexer lexer) {
-		super(lexer);
+	public ListParser(Lexer lexer, int k) {
+		super(lexer, k);
 	}
 
 	public void list() {
@@ -14,15 +14,20 @@ public class ListParser extends Parser {
 
 	public void elements() {
 		element();
-		while (lookahead.getType() == ListLexer.COMMA) {
+		while (LA(1) == ListLexer.COMMA) {
 			match(ListLexer.COMMA);
 			element();
 		}
 	}
 
 	private void element() {
-		if (lookahead.getType() == ListLexer.NAME) match(ListLexer.NAME);
-		else if (lookahead.getType() == ListLexer.LBRACK) list();
+		if (LA(1) == ListLexer.NAME && LA(2) == ListLexer.EQUALS) {
+			match(ListLexer.NAME);
+			match(ListLexer.EQUALS);
+			match(ListLexer.NAME);
+		} else if (LA(1) == ListLexer.NAME)
+			match(ListLexer.NAME);
+		 else if (LA(1) == ListLexer.LBRACK) list();
 		else throw new RuntimeException("error");
 	}
 
