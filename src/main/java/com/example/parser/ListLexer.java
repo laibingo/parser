@@ -10,8 +10,10 @@ public class ListLexer extends Lexer {
 
 	public static final int RBRACK = 5;
 
+	public static final int EQUALS = 6;
+
 	public static String[] tokenNames = {
-			"n/a", "<EOF>", "NAME", "COMMA", "LBRACK", "RBRACK"
+			"n/a", "<EOF>", "NAME", "COMMA", "LBRACK", "RBRACK", "EQUALS"
 	};
 
 	public ListLexer(String input) {
@@ -37,6 +39,9 @@ public class ListLexer extends Lexer {
 				case ']':
 					consume();
 					return new Token(RBRACK, "]");
+				case '=':
+					consume();
+					return new Token(EQUALS, "=");
 				default:
 					if (isLetter()) return NAME();
 					throw new RuntimeException("error");
